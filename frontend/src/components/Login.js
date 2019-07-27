@@ -31,6 +31,7 @@ class Login extends React.Component {
             console.log("submit", this.state.email);
             //to do !!! api call
             this.props.history.push("booking");
+            this.props
      
         }
   
