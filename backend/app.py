@@ -5,35 +5,42 @@ import psycopg2
 from flask_cors import CORS
 import json
 
-global connection 
-global cursor
 app = Flask("hackerman")
 CORS(app)
 
+global connection
+global cursor
 
-try: 
-    connection = psycopg2.connect(user="postgres",
-                                    password="aLpha%0.05", ####### PUT YOUR OWN PASSWORD HERE ######
-                                    host="127.0.0.1",
-                                    port="5432",
-                                    database="hackerman")
-    cursor = connection.cursor()        
-except:
-    print( "Failed to connect to the DATABASE")
+def connect_db():
+    try: 
+        connection = psycopg2.connect(user="postgres",
+                                        password="postgres", ####### PUT YOUR OWN PASSWORD HERE ######
+                                        host="127.0.0.1",
+                                        port="5432",
+                                        database="hackerman")      
+    except:
+        print( "Failed to connect to the DATABASE")
+
+    return connection
     
 
 def closeDB():
     #closing database connection.
-    global cursor
     global connection
+    global cursor
+
     if(connection):
-        cursor.close()
+        connection.cursor.close()
         connection.close()
         print("PostgreSQL connection is closed")
 
 def get_user_db(email):
     global connection
     global cursor
+
+    if (not connection):
+        connection = connect_db
+        cursor = connection.cursor()
     try:
         sql_select_query = """select * from users where email=%s;"""
         cursor.execute(sql_select_query, (email,))
@@ -43,7 +50,7 @@ def get_user_db(email):
     except (Exception, psycopg2.Error) as error :
         if(connection):
 
-            print("Failed to insert record into mobile table", error)        
+            print("Failed to find user data on USER Table", error)        
 
 def get_all_product_info():
     return
@@ -51,6 +58,9 @@ def get_all_product_info():
 def get_all_session_info():
     global connection
     global cursor
+    if (not connection):
+        connection = connect_db
+        cursor = connection.cursor()
 
     # To retrieve the available slot for booking 
     # List of slot will be returned as record in following format:
@@ -74,6 +84,11 @@ def get_all_session_info():
 
 
 def bookFreeSlot(session_id, user_email):
+    global connection
+    global cursor
+    if (not connection):
+        connection = connect_db
+        cursor = connection.cursor()
 
     # Checking for whether current seesion id can be booked
     # we are checking again with DB since it might be changed
@@ -97,6 +112,11 @@ def bookFreeSlot(session_id, user_email):
         cursor.execute(query, (user_email, session_id) )
     
 def account_exist(user_email, psswd):
+    global connection
+    global cursor
+    if (not connection):
+        connection = connect_db
+        cursor = connection.cursor()
     query="""
     select id from users where Email='%s' and Passwd='%s';
     """
@@ -155,15 +175,21 @@ def home_page():
 
 @app.route("/product/") 
 def get_product_info():
+    global connection
+    global cursor
+    if (not connection):
+        connection = connect_db
+        cursor = connection.cursor()
+
     query = """
-    select t.tooltype, c.address, t.rentingfee from tools as t, centres as c where t.location = c.id;
+    select * from tools;
     """
     cursor.execute(query)
     record = cursor.fetchall()
-    toollist = []
+    r_list = []
     for r in record:
-        toollist.append( (r[0], r[1], r[2]))
-    return json.dumps(toollist)
+        r_list.append({'name':r[0], 'img_src':r[1], 'id':r[2], 'location_id':r[3], 'rention_rate':r[4]})
+    return jsonify(r_list)
 
 @app.route("/user/<user_id>")
 def get_user_info(user_id):
@@ -208,10 +234,13 @@ def book(session_id):
 @app.route("/login/")
 def check_login():
     user_email = request.cookies.get('user_email')
+    result = {}
+    result['result'] = "False"
 
     # if user already logged in, go back.
     if user_email:
-        return 1
+        result['result'] = "True"
+        return jsonify(result)
     if request.method=='POST':
         user_email = request.form.get('user_email')
         psswd = request.form.get('psswd')
@@ -219,8 +248,8 @@ def check_login():
             resp = make_response(redirect('/'))
             resp.set_cookie('user_email', user_email)
             return resp
-        else:
-            return 0
+
+    return jsonify(result)
 
 
 def add_new_account(user_email, psswd):
@@ -279,5 +308,9 @@ def rentItem(tooltype):
 
 
 if __name__ == '__main__':
+    global connection
+    connection = connect_db()
+    global cursor
+    cursor = connection.cursor()
     app.run("0.0.0.0", "8080", debug=True)
     closeDB()
