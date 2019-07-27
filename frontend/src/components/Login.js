@@ -35,7 +35,7 @@ class Login extends React.Component {
             const init = {
                 method: 'POST',
                 headers: {
-                "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+                    "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
                 },
                 body: `username=${this.state.email}&password=${this.state.password}`
             } 
