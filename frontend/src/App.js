@@ -1,12 +1,12 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import ToolColumn from './component/ToolColumn.js'
+import Header from '../hackerman/frontend/src/component/Header';
+import Login from '../hackerman/frontend/src/component/Login';
 
 function App() {
   return (
     <div className="App">
-        <ToolColumn/>
+        <Header />
     </div>
   );
 }
