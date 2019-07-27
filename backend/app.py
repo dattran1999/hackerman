@@ -6,6 +6,31 @@ from flask_cors import CORS
 app = Flask("hackerman")
 CORS(app)
 
+def get_tools_db():
+    try:
+        connection = psycopg2.connect(user="postgres",
+                                        password="postgres",
+                                        host="127.0.0.1",
+                                        port="5432",
+                                        database="hackerman")
+        cursor = connection.cursor()
+
+        sql_select_query = """select * from tools;"""
+        cursor.execute(sql_select_query)
+        record = cursor.fetchall()
+        return record
+
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to get all the tools", error)
+
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
+
 def get_user_db(email):
     try:
         connection = psycopg2.connect(user="postgres",
@@ -18,13 +43,11 @@ def get_user_db(email):
         sql_select_query = """select * from users where email=%s;"""
         cursor.execute(sql_select_query, (email,))
         record = cursor.fetchone()
-        print(record)
-        # Update single record now
         return record
 
     except (Exception, psycopg2.Error) as error :
         if(connection):
-            print("Failed to insert record into mobile table", error)
+            print("Failed to find record with user email", error)
 
     finally:
         #closing database connection.
@@ -91,14 +114,23 @@ def get_product_info(product_id):
 @app.route("/user/<user_id>")
 def get_user_info(user_id):
     user_info = {}
-    user_info['email'] = user_id
+    # user_info['email'] = user_id
     #email = 'augusdn@gmail.com'
     result = get_user_db(user_id)
     user_info['id'] = result[0]
-    user_info['name'] = result[1]
+    user_info['password'] = result[1]
+    user_info['fName'] = result[2]
+    user_info['lName'] = result[3]
     user_info['email'] = user_id
-    user_info['bday'] = result[3]
+    user_info['pNumber'] = result[5]
+    user_info['DOB'] = result[6]
     return jsonify(user_info)
+
+@app.route("/tools/")
+def get_all_tools():
+    tools = {}
+    results = get_tools_db()
+    return jsonify(results)
 
 @app.route("/centre/<centre_id>")
 def get_centre_info(centre_id):
