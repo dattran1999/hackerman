@@ -3,7 +3,6 @@ CREATE TABLE Users (
     ID serial primary key,
     Name text not null,
     Email text not null, -- We will use email address as login id.
-    date text default null,
     DOB Date not null
 );
 
@@ -15,8 +14,8 @@ CREATE TABLE Centres (
 
 CREATE TABLE ClassSessions (
     ID serial primary key,
-    weekDay integer not null,
-    time timestamp,
+    weekDay integer not null, -- 0-6 : monday to sunday
+    timeStarts time,
     location integer references Centres(ID),
     capacity integer
 );
