@@ -31,8 +31,26 @@ class Login extends React.Component {
             console.log("submit", this.state.email);
             //to do !!! api call
             this.props.history.push("booking");
-            this.props
-     
+            console.log("submiy", this.state.email)
+            const init = {
+                method: 'POST',
+                headers: {
+                "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+                },
+                body: `username=${this.state.email}&password=${this.state.password}`
+            } 
+            fetch("http://0.0.0.0:8080/login", init)
+                .then(r => r.json())
+                .then((res) => {
+                    if (res.status === "success") {
+                        // FIXME: SUPER HACKY. storing the boolean instead of sesson id or whatever
+                        localStorage.setItem("isAuthenticated", "true");
+                        localStorage.setItem("userId", res.id)
+                    }
+                })
+            if (localStorage.getItem("isAuthicated") === "true") {
+                // TODO: do something...
+            }
         }
   
     

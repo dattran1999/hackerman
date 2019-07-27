@@ -1,17 +1,14 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card"
+import Card from "react-bootstrap/Card";
+import { BrowserRouter as Route, Link} from 'react-router-dom';
+import Tool from "../components/Tool";
 
 
-export default class Tool extends React.Component {
+
+export default class ToolCard extends React.Component {
     constructor(props) {
         super(props);
-        this.routeChange = this.routeChange.bind(this);
-    }
-    routeChange() {
-        console.log(this.props.id);
-        let path = '/';
-        // this.props.history.push(path);
     }
     render() {
         return (
@@ -23,7 +20,9 @@ export default class Tool extends React.Component {
                     <Card.Text text="info">Location: {this.props.location}</Card.Text>
                     <Card.Text text="info">Tool Type: {this.props.type}</Card.Text>
                 </Card.Body>
-                <Button variant="primary" onClick={this.routeChange}> Rent </Button>
+                <Link to={`/product/${this.props.id}`}> <Button variant="primary">Rent</Button> </Link>
+
+                <Route path="/product/:id" component={Tool} />
             </Card>
         );
     }

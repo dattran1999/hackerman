@@ -46,6 +46,20 @@ class Register extends React.Component {
         console.log("submit", this.state.email);
         //to do !!! api call
         this.props.history.push("login");
+        const init = {
+          method: 'POST',
+          headers: {
+            "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+          },
+          body: `username=${this.state.email}&password=${this.state.password}`
+          } 
+          fetch("http://0.0.0.0:8080/register", init)
+              .then(r => r.json())
+              .then((res) => {
+                  if (res.status === "success") {
+                      console.log("success");
+                  }
+              })
       }
       
   
