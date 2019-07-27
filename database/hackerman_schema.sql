@@ -1,8 +1,11 @@
 
 CREATE TABLE Users (
     ID serial primary key,
-    Name text not null,
+    passWd text not null, -- password 
+    FirstName text not null,
+    LastName text not null,
     Email text not null, -- We will use email address as login id.
+    PhoneNumber text,
     DOB Date not null
 );
 
