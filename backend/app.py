@@ -153,11 +153,17 @@ def home_page():
     data = {}
     return "Hello, World!"
 
-@app.route("/product/<product_id>") 
-def get_product_info(product_id):
-    product = {}
-    product['id'] = product_id
-    return jsonify(product)
+@app.route("/product/") 
+def get_product_info():
+    query = """
+    select t.tooltype, c.address, t.rentingfee from tools as t, centres as c where t.location = c.id;
+    """
+    cursor.execute(query)
+    record = cursor.fetchall()
+    toollist = []
+    for r in record:
+        toollist.append( (r[0], r[1], r[2]))
+    return json.dumps(toollist)
 
 # @app.route("/user/<user_id>")
 # def get_user_info(user_id):
@@ -243,8 +249,9 @@ def rentItem(tooltype):
     if not user_email:
         return 0
 
+    # Select one tool that has renting fee. (meaning rentable)
     query="""
-    select id from tools where tooltype='%s'
+    select id from tools as t where tooltype='%s'
     and rentingfee is not null limit 1;
     """
     cursor.execute(query, (tooltype) )
@@ -256,11 +263,9 @@ def rentItem(tooltype):
 
         query="""
         insert into rents values(%s, (select id from users where emails='%s'), '%s', DEFAULT );
+        update tools set rentingfee=null where id=%s;
         """
-        cursor.execute(query, (toolid, user_email, expiry_date) )
-
-
-
+        cursor.execute(query, (toolid, user_email, expiry_date, toolid) )
 
 
 if __name__ == '__main__':
