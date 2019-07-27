@@ -1,6 +1,6 @@
-import Tool from '../element/Tool.js';
+import Tool from '../element/ToolCard.js';
 import React from "react";
-import CardDeck from "react-bootstrap/CardDeck"
+import CardColumns from "react-bootstrap/CardColumns"
 
 export default class ToolColumn extends React.Component {
     constructor(props) {
@@ -10,12 +10,14 @@ export default class ToolColumn extends React.Component {
         let tools = 
             [
                 {
+                    id: 123,
                     name: "Screw Driver",
                     price: 900,
                     location: "here",
                     type: "machine"
                 }, 
                 {
+                    id: 124,
                     name: "Screw Driver",
                     price: 900,
                     location: "here",
@@ -29,7 +31,9 @@ export default class ToolColumn extends React.Component {
         //     })
         return tools.map(
             t => (
-                <Tool
+                <Tool 
+                    key={t.id}
+                    id={t.id}
                     name={t.name}
                     price={t.price}
                     location={t.location}
@@ -41,9 +45,9 @@ export default class ToolColumn extends React.Component {
     }
     render(){
         return (
-            <CardDeck>
+            <CardColumns>
                 {this.getTools()}
-            </CardDeck>
+            </CardColumns>
         );
     }
 }
