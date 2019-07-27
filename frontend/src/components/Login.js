@@ -8,7 +8,8 @@ class Login extends React.Component {
     
         this.state = {
           email: "",
-          password: ""
+          password: "",
+          showError: false
         };
     }
     
@@ -24,13 +25,21 @@ class Login extends React.Component {
     
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log("submiy", this.state.email)
+        if (this.state.email === "" || this.state.password === "") {
+            this.setState({showError: true});       
+        } else {
+            console.log("submit", this.state.email);
+            //to do !!! api call
+            this.props.history.push("booking");
+     
+        }
   
     
     }
     render() {
       return (
           <div>
+               {this.state.showError && <div color="red" className="error-message">Oops! The field can not be empty!</div>}
             <Row>
             <Col></Col>
             <Col xs={6}>
@@ -48,15 +57,15 @@ class Login extends React.Component {
                     <Form.Control type="password" placeholder="Password" onChange={this.handlePasswordChange} />
                 </Form.Group>
                 <Form.Group controlId="formBasicChecbox">
-                    <Form.Check type="checkbox" label="Check me out" />
+                    <Form.Check type="checkbox" label="Remember my email" />
                 </Form.Group>
-                <Button variant="primary" type="submit" onClick={this.handleSubmit}>
+                <Button variant="primary" type="submit" onClick={this.handleSubmit} href ='booking'>
                     Submit
                 </Button>
-        </Form>
-        </Col>
-        <Col></Col>
-        </Row>
+            </Form>
+            </Col>
+            <Col></Col>
+            </Row>
           </div>
       );
     }

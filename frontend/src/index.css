@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.error-message {
+  background-color: #fa1a1a;
+  color: white;
+  padding: 1em;
+}

@@ -12,22 +12,21 @@ class Register extends React.Component {
           lastName: "",
           firstName: "",
           age: "",
-          number: ""
+          number: "",
+          showError: false 
         };
     }
+    //Event trigger 
     handleEmailChange = (e) => {
       this.setState({email: e.target.value});
     }
     handlePasswordChange =(e) => {
       this.setState({password: e.target.value});
     }
-    handlelastNameChange = (e) => {
+    handleLastNameChange = (e) => {
       this.setState({lastName: e.target.value});
     }
-    handlefirstNameChange =(e) => {
-      this.setState({firstName: e.target.value});
-    }
-    handlefirstNameChange =(e) => {
+    handleFirstNameChange =(e) => {
       this.setState({firstName: e.target.value});
     }
     handleAgeChange =(e) => {
@@ -38,14 +37,23 @@ class Register extends React.Component {
     }
 
     handleSubmit = (e) => {
-      //e.preventDefault();
-      console.log("submit", this.state.email);
-      //to do !!! api call
+      e.preventDefault();
+      //Error Handling
+      if (this.state.number.length !== 10 || this.state.mail === "" || this.state.password === "" || this.state.firstName === "" ||
+      this.state.number === "" || this.state.lastName === "" || this.state.age === "") {
+        this.setState({showError: true});       
+      } else {
+        console.log("submit", this.state.email);
+        //to do !!! api call
+        this.props.history.push("login");
+      }
+      
   
     }
     render() {
       return (
         <div>
+          {this.state.showError && <div color="red" className="error-message">Oops! The field can not be empty and the number must be 10 digits!</div>}
           <Row>
           <Col></Col>
           <Col xs={6}>
@@ -53,24 +61,24 @@ class Register extends React.Component {
             <Form.Row>
               <Form.Group as={Col} controlId="formGridEmail">
                 <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" />
+                <Form.Control type="email" placeholder="Enter email" onChange={this.handleEmailChange} />
               </Form.Group>
 
               <Form.Group as={Col} controlId="formGridPassword">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
+                <Form.Control type="password" placeholder="Password" onChange={this.handlePasswordChange}/>
               </Form.Group>
             </Form.Row>
 
             <Form.Row>
               <Form.Group as={Col} controlId="formGridFirstName">
                 <Form.Label>First name</Form.Label>
-                <Form.Control type="text" placeholder="Enter your First name" />
+                <Form.Control type="text" placeholder="Enter your First name" onChange={this.handleFirstNameChange}/>
               </Form.Group>
 
               <Form.Group as={Col} controlId="formGridLastName">
                 <Form.Label>Last Name</Form.Label>
-                <Form.Control type="text" placeholder="Enter your Last name" />
+                <Form.Control type="text" placeholder="Enter your Last name"  onChange={this.handleLastNameChange}/>
               </Form.Group>
             </Form.Row>
           
@@ -78,16 +86,16 @@ class Register extends React.Component {
             <Form.Row>
               <Form.Group as={Col} controlId="formGridAge">
                 <Form.Label>Age</Form.Label>
-                <Form.Control type="number" placeholder="Enter your Age" />
+                <Form.Control type="number" placeholder="Enter your Age" onChange={this.handleAgeChange}/>
               </Form.Group>
 
               <Form.Group as={Col} controlId="formGridNumber">
                 <Form.Label>Mobile Number</Form.Label>
-                <Form.Control type="number" placeholder="Enter your number" />
+                <Form.Control type="number" placeholder="Enter your number" onChange={this.handleNumberChange}/>
               </Form.Group>
             </Form.Row>
 
-            <Button variant="primary" type="submit" href="login">
+            <Button variant="primary" type="submit" onClick={this.handleSubmit}>
               Submit
             </Button>
             

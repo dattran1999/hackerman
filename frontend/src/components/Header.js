@@ -3,9 +3,13 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import {Navbar,Nav} from 'react-bootstrap';
 import Login from "./Login";
 import Register from "./Register";
+import Conditional from "./conditional";
 
 
 const Header = (props) => {
+
+    var isLogging = false
+    
     return (
     <Router>
         <main>
@@ -14,7 +18,7 @@ const Header = (props) => {
             <Nav className="mr-auto">
             <Nav.Link href="home">Home</Nav.Link>
             <Nav.Link href="register">Register</Nav.Link>
-            <Nav.Link href="login">Login</Nav.Link>
+            <Conditional isLogging={isLogging} />
             <Nav.Link href="booking">Booking</Nav.Link>
             </Nav>
             </Navbar>
@@ -24,6 +28,7 @@ const Header = (props) => {
 
               <Route path='/login' component={Login} />
               <Route path='/register' component={Register} />
+              <Route path='/booking' isLogging = {true}/>
 
             </Switch>
             
