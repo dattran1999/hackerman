@@ -1,12 +1,14 @@
 import React from 'react';
 import './App.css';
-import Header from '../hackerman/frontend/src/component/Header';
-import Login from '../hackerman/frontend/src/component/Login';
+import Header from './components/Header';
+import Login from './components/Login';
+import ToolColumn from './components/ToolColumn'
 
 function App() {
   return (
     <div className="App">
         <Header />
+        <ToolColumn/>
     </div>
   );
 }
