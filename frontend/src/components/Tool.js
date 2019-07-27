@@ -1,6 +1,6 @@
 import React from "react";
 import {Spinner, Image, Container, Col, Row, Button} from "react-bootstrap"
-
+import machines from "./machines"
 
 export default class ToolColumn extends React.Component {
     constructor(props) {
