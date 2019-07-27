@@ -1,8 +1,11 @@
 
 CREATE TABLE Users (
     ID serial primary key,
-    Name text not null,
+    passWd text not null, -- password 
+    FirstName text not null,
+    LastName text not null,
     Email text not null, -- We will use email address as login id.
+    PhoneNumber text,
     DOB Date not null
 );
 
@@ -22,6 +25,7 @@ CREATE TABLE ClassSessions (
 
 CREATE TABLE Tools (
     ToolType text,
+    ImgSrc text,
     ID serial primary key,
     location integer references Centres(ID),
     RentingFee float

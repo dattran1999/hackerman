@@ -10,6 +10,7 @@ global cursor
 app = Flask("hackerman")
 CORS(app)
 
+
 try: 
     connection = psycopg2.connect(user="postgres",
                                     password="aLpha%0.05", ####### PUT YOUR OWN PASSWORD HERE ######
@@ -37,12 +38,11 @@ def get_user_db(email):
         sql_select_query = """select * from users where email=%s;"""
         cursor.execute(sql_select_query, (email,))
         record = cursor.fetchone()
-        print(record)
-        # Update single record now
         return record
 
     except (Exception, psycopg2.Error) as error :
         if(connection):
+
             print("Failed to insert record into mobile table", error)        
 
 def get_all_product_info():
@@ -165,17 +165,27 @@ def get_product_info():
         toollist.append( (r[0], r[1], r[2]))
     return json.dumps(toollist)
 
-# @app.route("/user/<user_id>")
-# def get_user_info(user_id):
-#     user_info = {}
-#     user_info['email'] = user_id
-#     #email = 'augusdn@gmail.com'
-#     result = get_user_db(user_id)
-#     user_info['id'] = result[0]
-#     user_info['name'] = result[1]
-#     user_info['email'] = user_id
-#     user_info['bday'] = result[3]
-#     return jsonify(user_info)
+@app.route("/user/<user_id>")
+def get_user_info(user_id):
+    user_info = {}
+    # user_info['email'] = user_id
+    #email = 'augusdn@gmail.com'
+    result = get_user_db(user_id)
+    user_info['id'] = result[0]
+    user_info['password'] = result[1]
+    user_info['fName'] = result[2]
+    user_info['lName'] = result[3]
+    user_info['email'] = user_id
+    user_info['pNumber'] = result[5]
+    user_info['DOB'] = result[6]
+    return jsonify(user_info)
+
+
+@app.route("/tools/")
+def get_all_tools():
+    tools = {}
+    results = get_tools_db()
+    return jsonify(results)
 
 @app.route("/centre/<centre_id>")
 def get_centre_info(centre_id):
