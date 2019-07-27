@@ -13,17 +13,15 @@ export default class ToolColumn extends React.Component {
         const url = `http://0.0.0.0:8080/product/123`//${this.props.id}`;
         fetch(url, {
             method: "GET",
-            mode: "no-cors",
             headers: {
                 'Content-Type': 'application/json',
             },
         })
-            .then(r => console.log(r))
+            .then(r => r.json())
             .then(r => {
                 console.log(r);
             })
             .then(() => this.setState({ loading: false }))
-        
     }
     render(){
         const { loading } = this.state;

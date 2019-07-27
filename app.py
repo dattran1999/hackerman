@@ -1,7 +1,8 @@
 from flask import Flask, jsonify, request
-from flask_login import LoginManager, login_user, logout_user
+from flask_cors import CORS
 
 app = Flask("hackerman")
+CORS(app)
 
 @app.route("/")
 def home_page():
@@ -14,7 +15,9 @@ def home_page():
 def get_product_info(product_id):
     product = {}
     product['id'] = product_id
-    return jsonify(product)
+    response = jsonify(product)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 @app.route("/user/<user_id>")
 def get_user_info(user_id):
@@ -24,6 +27,7 @@ def get_user_info(user_id):
 
 @app.route("/centre/<centre_id>")
 def get_centre_info(centre_id):
+    
     return jsonify({
         "id": centre_id,
     })
