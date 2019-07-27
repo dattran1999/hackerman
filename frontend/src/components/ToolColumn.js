@@ -1,4 +1,4 @@
-import Tool from '../element/ToolCard.js';
+import ToolCard from '../element/ToolCard.js';
 import React from "react";
 import CardColumns from "react-bootstrap/CardColumns"
 
@@ -31,7 +31,7 @@ export default class ToolColumn extends React.Component {
         //     })
         return tools.map(
             t => (
-                <Tool 
+                <ToolCard
                     key={t.id}
                     id={t.id}
                     name={t.name}
