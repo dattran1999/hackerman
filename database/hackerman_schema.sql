@@ -25,6 +25,7 @@ CREATE TABLE ClassSessions (
 
 CREATE TABLE Tools (
     ToolType text,
+    ImgSrc text,
     ID serial primary key,
     location integer references Centres(ID),
     RentingFee float
