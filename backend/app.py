@@ -118,9 +118,9 @@ def account_exist(user_email, psswd):
         connection = connect_db
         cursor = connection.cursor()
     query="""
-    select id from users where Email='%s' and Passwd='%s';
+    select id from users where Email=%s and Passwd=%s;
     """
-    cursor.execute(query, (user_email, psswd) )
+    cursor.execute(query, (user_email, psswd,) )
     return cursor.rowcount != 0
 
 
@@ -231,7 +231,7 @@ def book(session_id):
     user_email = request.cookies.get('user_email')
     return bookFreeSlot(session_id, user_email)
 
-@app.route("/login/")
+@app.route("/login", methods=["GET" , "POST"])
 def check_login():
     user_email = request.cookies.get('user_email')
     result = {}
@@ -242,45 +242,49 @@ def check_login():
         result['result'] = "True"
         return jsonify(result)
     if request.method=='POST':
-        user_email = request.form.get('user_email')
-        psswd = request.form.get('psswd')
+        user_email = request.form.get('username')
+        psswd = request.form.get('password')
         if(account_exist(user_email, psswd) ):
-            resp = make_response(redirect('/'))
-            resp.set_cookie('user_email', user_email)
-            return resp
+            result['result'] = "True"
+            return result
 
     return jsonify(result)
 
 
-def add_new_account(user_email, psswd):
-    first_name = request.form.get('first_name')
-    last_name = request.form.get('last_name')
-    phone_number = request.form.get('phone_number')
-    dob = request.form.get('dob')
-
+def add_new_account(user_email, psswd, first_name, last_name, phone_number, dob):
+    global connection
+    global cursor
+    if (not connection):
+        connection = connect_db
+        cursor = connection.cursor()
     query = """
-    insert into bookings values ( DEFAULT,  %s, %s, %s, %s, %s, %s);
+    INSERT INTO Users VALUES (DEFAULT, %s, %s,  %s, %s, %s, %s);
     """
-    cursor.execute(query, (psswd, first_name, last_name, user_email, phone_number, dob) )
+    cursor.execute(query, (psswd, first_name, last_name, user_email, phone_number, dob,) )
+    connection.commit()
+    print("register succcess")
 
 
-@app.route("/register/")
+@app.route("/register", methods= ["GET", "POST"])
 def check_user_can_be_registered():
 
     if request.method=='POST':
-        user_email = request.form.get('user_email')
-        psswd = request.form.get('psswd')
+        user_email = request.form.get('username')
+        psswd = request.form.get('password')
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        phone_number = request.form.get('phone_number')
+        dob = request.form.get('dob')
 
     else:
-        return 0
+        return jsonify({"result": "False"})
 
     if(not account_exist(user_email, psswd) ):
-
-        resp = make_response(redirect('/'))
-        resp.set_cookie('user_email', user_email)
-        return resp
+        print("check passed")
+        add_new_account(user_email, psswd, first_name, last_name, phone_number, dob)
+        return jsonify({"result": "True"})
     else:
-        return 0
+        return jsonify({"result": "False"})
 
 @app.route("/rent/<tooltype>")
 def rentItem(tooltype):

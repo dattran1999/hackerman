@@ -42,15 +42,13 @@ class Login extends React.Component {
             fetch("http://0.0.0.0:8080/login", init)
                 .then(r => r.json())
                 .then((res) => {
-                    if (res.status === "success") {
+                    if (res.result === "True") {
                         // FIXME: SUPER HACKY. storing the boolean instead of sesson id or whatever
                         localStorage.setItem("isAuthenticated", "true");
                         localStorage.setItem("userId", res.id)
                     }
                 })
-            if (localStorage.getItem("isAuthicated") === "true") {
-                // TODO: do something...
-            }
+
         }
   
     

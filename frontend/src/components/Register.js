@@ -51,7 +51,7 @@ class Register extends React.Component {
           headers: {
             "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
           },
-          body: `username=${this.state.email}&password=${this.state.password}`
+          body: `username=${this.state.email}&password=${this.state.password}&first_name=${this.state.firstName}&last_name=${this.state.lastName}&phone_number=${this.state.number}&dob=${this.state.age}`
           } 
           fetch("http://0.0.0.0:8080/register", init)
               .then(r => r.json())
@@ -100,7 +100,7 @@ class Register extends React.Component {
             <Form.Row>
               <Form.Group as={Col} controlId="formGridAge">
                 <Form.Label>Age</Form.Label>
-                <Form.Control type="number" placeholder="Enter your Age" onChange={this.handleAgeChange}/>
+                <input type="date" placeholder="Enter your Age" onChange={this.handleAgeChange}/>
               </Form.Group>
 
               <Form.Group as={Col} controlId="formGridNumber">
